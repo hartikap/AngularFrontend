@@ -11,9 +11,10 @@ var app = express();
 //=====================Middlewares========================
 //Bodyparser json() middleware parses the json object
 //from HTTP POST request
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 
-/*app.use(function(req,res,next){
+app.use(function(req,res,next){
     
     console.log(req.method);
     console.log(req.path);
@@ -23,7 +24,7 @@ app.use(bodyParser.urlencoded());
     //database.myFunction();
     //Send request forward in stack
     next();
-});*/
+});
 
 
 // Define middlewares for our static files (.html, .css, .js files

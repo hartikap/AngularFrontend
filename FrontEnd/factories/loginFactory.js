@@ -5,7 +5,6 @@ main_module.factory('loginFactory', function($resource) {
     // This function can be called from ANY controller using this factory implementation
     factory.startlogin = function(data) {
         
-        console.log(data);
         // Create a resource for context '/friends/login'
         var req = $resource('/friends/login', {}, {'post': {method:'POST'}});
         // Use POST method to send the username and password to above context
@@ -27,3 +26,4 @@ main_module.factory('loginFactory', function($resource) {
     return factory;
         
 });
+

@@ -103,17 +103,7 @@ exports.findPersonsByName = function(req,res){
         res.send(data[0].friends);
     });
     
-    /*
-    db.Person.find({name:{'$regex':'^' + name,'$options':'i'}},function(err,data){
-        
-        if(err){
-            res.send('error');
-        }
-        else{
-            console.log(data);
-            res.send(data);
-        }
-    });*/
+
 }
 
 exports.registerFriend = function(req,res){
@@ -123,10 +113,10 @@ exports.registerFriend = function(req,res){
         
         if(err){
             
-            res.send({status:err.message});
+            res.status(500).send({status:err.message});
         }
         else{
-            res.send({status:"Ok"});
+            res.status(200).send({status:"Ok"});
         }
     });
 }
@@ -148,7 +138,8 @@ exports.loginFriend = function(req,res){
             
         }else{
             //=< 0 means wrong username or password
-            if(data.length > 0){
+            if(data){
+                req.session.kayttaja = data.username;
                 res.send(200, {status:"Ok"});
             }
             else{
@@ -161,15 +152,17 @@ exports.loginFriend = function(req,res){
 
 exports.getFriendsByUsername = function(req,res){
     
-    var usern = req.params.username.split("=")[1];
-    db.Friends.find({username:usern}).
+   // var usern = req.params.username.split("=")[1];
+    db.Friends.findOne({username:req.session.kayttaja}).
         populate('friends').exec(function(err,data){
-            
-            console.log(err);
-            console.log(data[0].friends);
-            res.send(data[0].friends);
+           
+        if (data) {
+           res.send(data.friends);
+        } else {
+            res.redirect('/');
+        }
         
-        });
+    });
 }
 
 

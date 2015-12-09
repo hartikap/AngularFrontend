@@ -29,7 +29,7 @@ exports.saveNewPerson = function(req,res){
     //Save it to database
     personTemp.save(function(err,ok){
         
-        db.Friends.update({username:req.body.user},
+        db.Friends.update({username:req.session.kayttaja},
                           {$push:{'friends':personTemp._id}},
                           function(err,model){
             
@@ -42,7 +42,7 @@ exports.saveNewPerson = function(req,res){
     });
 }
 
-//This function deletes one person from our collection
+//This function deletes one person from our collection. $in to use arrays
 exports.deletePerson = function(req,res){
     
     //what happens here is that req.params.id
@@ -128,9 +128,9 @@ exports.loginFriend = function(req,res){
         password:req.body.password
     }
     
-    console.log(req.username);
+    console.log("requestin username: " + req.body.username);
     
-    db.Friends.find(searchObject,function(err,data){
+    db.Friends.findOne(searchObject,function(err,data){
         
         if(err){
             
@@ -139,6 +139,9 @@ exports.loginFriend = function(req,res){
         }else{
             //=< 0 means wrong username or password
             if(data){
+                console.log("DATA: " +data);
+                console.log("Sessioon tallennetava salasana: " +data.password);
+                console.log("Sessioon tallennetava nimi: " +data.username);
                 req.session.kayttaja = data.username;
                 res.send(200, {status:"Ok"});
             }

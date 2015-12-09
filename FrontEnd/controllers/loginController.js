@@ -13,13 +13,15 @@ main_module.controller('controllerLogin', function($scope, loginFactory, $locati
             username: $scope.user,
             password: $scope.pass
         }
+        console.log("logincontrollerin temppi: "+ temp.username);
         
         var waitPromise = loginFactory.startlogin(temp);
         // Wait the response from server
         waitPromise.then(function(data) {
             // Code inside this function will be called when success response
             // from server is received
-            $location.path('/list');
+            
+           $location.path('/list');
         }, function(data) {
             $('.error').text('Wrong username or password!');
         });

@@ -1,21 +1,21 @@
-main_module.controller('friendDataController', function( $scope, friendDataFactory ) {
+main_module.controller('friendDataController',function($scope,friendDataFactory,$location){
     
     console.log('friendDataController loaded');
+    console.log(friendDataFactory.friendsArray);
     
+   
+    friendDataFactory.getFriendData(dataCallback);
+
     
-    // Check if factory does not have the data
-    if (friendDataFactory.friendsArray.length === 0)
-    {
-        var response = friendDataFactory.getFriendData();
+    function dataCallback(responseArray) {
+     
+        $scope.friendData = responseArray;
+        //$factory.friendsArray = response.data;
         
-        response.then(function(data) {
-            friendDataFactory.friendsArray = data;
-            $scope.friendData = data;
-        });
-    } else {
-            $scope.friendData = friendDataFactory.friendsArray;
     }
         
+
+ 
         
         
 });

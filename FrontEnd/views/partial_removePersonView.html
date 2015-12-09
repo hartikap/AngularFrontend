@@ -1,8 +1,4 @@
-<a href="/logout">Logout</a>
-<a href="#/addperson">Add Person</a>
-<a href="#/removeperson">Remove Persons</a>
-<h1>Here is the table data of your friends</h1>
-<table class="table table-striped">
+<table>
 
     <thead>
         <tr>
@@ -10,15 +6,16 @@
             <th>Name </th>
             <th>Address </th>
             <th>Age </th>
+            <th>Remove</th>
         
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat='person in friendData' ng-click='rowClicked(person._id)'>
+        <tr ng-repeat='person in friendData'>
             <td>{{person.name}}</td>
             <td>{{person.address}}</td>
             <td>{{person.age}}</td>
-            
+            <td><input type="checkbox" ng-click='addToDeleteClicked($event,$index,person._id)'></td>
         </tr>
     </tbody>
 

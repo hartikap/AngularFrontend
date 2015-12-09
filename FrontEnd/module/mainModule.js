@@ -19,7 +19,16 @@ main_module.config(function($routeProvider) {
         templateUrl:'partial_dataView.html',
         controller: 'friendDataController'
         
-    });
+    })
+        .when('/addperson', {
+        templateUrl:'partial_addPersonView.html',
+        controller: 'addController'
+    })
+        .when('/removeperson', {
+        templateUrl:'partial_removePersonView.html',
+        controller: 'removeController'
+    })
+    ;
     
     
 });

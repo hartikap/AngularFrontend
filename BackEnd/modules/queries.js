@@ -147,6 +147,7 @@ exports.loginFriend = function(req,res){
             }
             else{
                 res.send(401, {status:"Wrong username or password"});
+                console.log("ei toimi loggaus");
             }
             
         }

@@ -13,6 +13,7 @@ main_module.controller('controllerLogin', function($scope, loginFactory, $locati
             username: $scope.user,
             password: $scope.pass
         }
+        
         console.log("logincontrollerin temppi: "+ temp.username);
         
         var waitPromise = loginFactory.startlogin(temp);

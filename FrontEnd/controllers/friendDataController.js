@@ -1,49 +1,28 @@
-main_module.controller('friendDataController',function($scope,friendDataFactory,$location){
+main_module.controller('friendDataController',function($scope,friendDataFactory,$location, loginFactory){
     
     console.log('friendDataController loaded');
-    console.log(friendDataFactory.friendsArray);
+
+    $scope.username1 = loginFactory.username1;
     
-   
     friendDataFactory.getFriendData(dataCallback);
-
     
-    function dataCallback(responseArray) {
-     
-        $scope.friendData = responseArray;
-        //$factory.friendsArray = response.data;
+    $scope.rowCliked = function(id){
         
-    }
-        
-
-    $scope.rowClicked = function(id) {
-        
-        console.log("Klikkasit id:tä: " + id);
-        $('.question').text("<div class="alert alert-success" role="alert"> <a href="#" class="alert-link">...</a> </div> <div class="alert alert-info" role="alert">
-  <a href="#" class="alert-link">...</a>
-</div>")
+        friendDataFactory.selected_id = id;
+        $location.path('/edit').replace();
     }
     
+    function dataCallback(dataArray){
+        
+        $scope.friendData = dataArray;
+    }
     
-    $scope.items = [
-    'Modify',
-    'Delete',
-    ];
-
-    $scope.status = { 
-        isopen: false
-    };
-
-    $scope.toggled = function(open) {
-        $log.log('Dropdown is now: ', open);
-    };
-
-    $scope.toggleDropdown = function($event) {
-        $event.preventDefault();
-    $event.stopPropagation();
-        $scope.status.isopen = !$scope.status.isopen;
-    };
-        
- 
-        
-        
+    $scope.search = function(){
+        console.log('search pressed');
+        friendDataFactory.search($scope.search_term).then(function(data){
+            console.log(data);
+            $scope.friendData = data;
+            
+        });
+    }
 });

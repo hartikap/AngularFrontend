@@ -1,51 +1,76 @@
-main_module.factory('friendDataFactory',function($resource,$http) {
+main_module.factory('friendDataFactory',function($resource,$http){
     
     var factory = {};
-    
-    // In this array we cache the friends information so we need not
-    // make further requests if the information hasn't changed
+    factory.selected_id = null;
+    //In this array we cache the friends information,
+    //so that once stored in array we wont make any further request
     factory.friendsArray = [];
     
-    factory.getFriendData = function (callback) {
+    factory.getFriendData = function(callbackFunc){
         
-        if (factory.friendsArray.length === 0)
-        {
-        
-            var req = $resource('/friends', {}, {'get':{method:'GET'}});
-        
-            req.query().$promise.then(function(data) {
+        if(factory.friendsArray.length === 0){
+            $http.defaults.headers.common['x-access-token'] = sessionStorage['token'];
+            var resource = $resource('/friends',{},{'get':{method:'GET'}});
+            resource.query().$promise.then(function(data){
                 
-                console.log("Response friendDataFactoryssä getille: " + data);
-                factory.friendsArray = data;
-                callback(factory.friendsArray);
-                //$location.path('/list').replace();
-            
-            }, function(error) {
+              factory.friendsArray = data;
+              callbackFunc(factory.friendsArray);    
                 
-                friendsArray = [];
-                //$location.path('/list').replace();
-        
+            },function(error){
+                
+                factory.friendsArray = [];
+                callbackFunc(factory.friendsArray);
             });
-   
-        } else {
-            callback(factory.friendsArray);
-            //$location.path('/list').replace();
         }
-        
+        else{
+            
+            callbackFunc(factory.friendsArray);
+        }
+    }
+    //Updates the data to back end
+    factory.updateData = function(data){
+        $http.defaults.headers.common['x-access-token'] = sessionStorage['token'];
+        var resource = $resource('/persons',{},{'put':{method:'PUT'}});
+        return resource.put(data).$promise;
     }
     
-    factory.addFriendData = function (data) {
-        
-        // Create a resource for context '/persons'
-        var req = $resource('/persons', {}, {'post': {method:'POST'}});
-        // Use PUT method to send the new person info to above context
-        // Note that we return an promise object from here
-        return req.save(data).$promise;
-        
+    factory.deleteData = function(data){
+        $http.defaults.headers.common['content-type'] = 'application/json'; 
+        $http.defaults.headers.common['x-access-token'] = sessionStorage['token'];
+        var resource = $resource('/persons',{},{'delete':{method:'DELETE'}});
+        return resource.delete(data).$promise;
     }
     
+    /**
+      *This function searches a person from array containing an id
+      *that was stored when user cliked the row in the partial_dataView
+      *page. When it finds the correct one from the array, it returns
+      *that object.
+      */
+    factory.getSelectedFriend = function(){
         
-        
+        for(var i = 0; i < factory.friendsArray.length; i++){
+            
+            if(factory.friendsArray[i]._id === factory.selected_id){
+                
+                return factory.friendsArray[i];
+            }
+        }
+    }
+    
+    //Updates the data to back end
+    factory.insertData = function(data){
+        $http.defaults.headers.common['x-access-token'] = sessionStorage['token'];
+        var resource = $resource('/persons',{},{'post':{method:'POST'}});
+        return resource.post(data).$promise;
+    }
+    
+    factory.search = function(term){
+        $http.defaults.headers.common['x-access-token'] = sessionStorage['token'];
+        var resource = $resource('/persons/search/',{name:term},{'get':{method:'GET'}});
+        return resource.query().$promise;
+    }
+    
     return factory;
     
 });

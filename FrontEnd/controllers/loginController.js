@@ -1,55 +1,58 @@
-// This is the way you define controllers.
-// The main_module variable is defined in mainModule.js file(located in module folder).
-// The first argument is the name of the controller. THIS IS IMPORTANT, because you use THIS
-// name when you want to use this controller in some view.
-// The $scope-object is the glue between the view and controller. You use this object
-// to transfer data between the view and the controller.
-main_module.controller('controllerLogin', function($scope, loginFactory, $location) {
 
+//This is the way you define controllers
+//the main_module variable is defined in mainModule.js file (located in module folder)
+//The first argument is the name of the controller. THIS IS IMPORTANT, because you use THIS
+//name when you want to use this controller in some view
+//The $scope object is the glue between the view and controller. You use this object to transfer
+//data between the view and controller
+main_module.controller('controllerLogin',function($scope,loginFactory,$location,Flash){
     
-    $scope.loginClicked = function () {
+    
+    //This is called when login button is pressed in partial_login.html
+    $scope.loginClicked = function(){
+        
+        console.log('login was pressed');
         
         var temp = {
-            username: $scope.user,
-            password: $scope.pass
+            username:$scope.user,
+            password:$scope.pass
         }
         
-        console.log("logincontrollerin temppi: "+ temp.username);
+        var waitPromise = loginFactory.startLogin(temp);
         
-        var waitPromise = loginFactory.startlogin(temp);
-        // Wait the response from server
-        waitPromise.then(function(data) {
-            // Code inside this function will be called when success response
-            // from server is received
-            
-           $location.path('/list');
-        }, function(data) {
-            $('.error').text('Wrong username or password!');
+        //Wait the response from server
+        waitPromise.then(function(data){
+            // Store jsonwebtoken
+            sessionStorage['token'] = data.secret;
+            console.log(data.secret);
+            $location.path('/list');
+            //code inside this block will be called when success response
+            //from server receives
+        },function(data){
+            Flash.create('danger', 'Wrong user name or password given', 'custom-class');            
         });
-    
     }
     
-    $scope.registerClicked = function () {
-                
-        var temp = {
-            username: $scope.user,
-            password: $scope.pass
+    $scope.registerClicked = function(){
+        
+         var temp = {
+            username:$scope.user,
+            password:$scope.pass
         }
+         
+        var response = loginFactory.startRegister(temp);
         
-        var response = loginFactory.startregister(temp);
-        // Wait the response from server
-        response.then(function(data) {
-            // Code inside this function will be called when success response
-            // from server is received
-            alert('New user registered. You can now login with your credentials');
-        }, function(data) {
-            // Code inside this function will be called when error response
-            // from server is received
-            alert('Username taken!');
-            //$('.error').text('Username taken!');
-        });
-        
+        response.then(success,error)
     }
     
+    function success(data){
     
+        Flash.create('success', 'New user added!', 'custom-class'); 
+    }
+
+    function error(data){
+
+        Flash.create('danger', 'Username already in use!', 'custom-class');
+    }
 });
+

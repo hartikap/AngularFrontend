@@ -134,6 +134,7 @@ exports.registerFriend = function(req,res){
 
 exports.loginFriend = function(req,res){
     
+    
     var searchObject = {
         username:req.body.username,
         password:req.body.password

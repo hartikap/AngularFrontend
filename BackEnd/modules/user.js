@@ -1,4 +1,5 @@
 var query = require('./queries');
+var mysql = require('./mysql_module');
 /**
   *This file is a router for User resource
   *Version:0.0.1
@@ -20,12 +21,15 @@ router.get('/',function(req,res){
 //localhost:3000/friends/login
 router.post('/login',function(req,res){
     
-    query.loginFriend(req,res);
+    //mysql.loginMysql(req,res);
+    mysql.loginMysqlProc(req,res);
+    //query.loginFriend(req,res);
 });
 
 //This router handles a request to uri
 //localhost:3000/friends/register
 router.post('/register',function(req,res){
+    
     
     query.registerFriend(req,res);
 });

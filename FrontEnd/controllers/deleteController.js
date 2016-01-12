@@ -37,7 +37,7 @@ main_module.controller('deleteController',function($scope,friendDataFactory,Flas
             
             var data = {
                 
-                forDelete:$scope.deleteArray
+                forDelete:$scope.deleteArray;
             }
             
             friendDataFactory.deleteData(data).then(function(data){
